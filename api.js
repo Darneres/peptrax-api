@@ -44,13 +44,29 @@ Sort by price_per_mg ascending. Return ONLY JSON.`,
       res.on('end', () => {
         try {
           const parsed = JSON.parse(data);
-          const text = parsed.content.map(b => b.text || '').join('');
+          // Handle all content block types including tool_use and tool_result
+          const text = parsed.content
+            .filter(b => b.type === 'text')
+            .map(b => b.text || '')
+            .join('');
+          
+          if (!text) {
+            reject(new Error('No text in response'));
+            return;
+          }
+          
           const clean = text.replace(/```json|```/g, '').trim();
           const start = clean.indexOf('{');
           const end = clean.lastIndexOf('}');
+          
+          if (start === -1 || end === -1) {
+            reject(new Error('No JSON found in response'));
+            return;
+          }
+          
           resolve(JSON.parse(clean.substring(start, end + 1)));
         } catch (e) {
-          reject(new Error('Parse failed: ' + e.message));
+          reject(new Error('Parse failed: ' + e.message + ' Raw: ' + data.substring(0, 200)));
         }
       });
     });
