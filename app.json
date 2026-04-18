@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "8d2821d2-3c85-4d64-8d4d-f4b5c1f85535"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.dantheb.peptraxapi",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    }
+  }
+}
